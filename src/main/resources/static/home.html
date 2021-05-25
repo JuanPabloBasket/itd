@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ITD Application Web</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="/js/angular.min.js"></script>
+  <script src="/js/angular-route.min.js"></script>
+</head>
+<body ng-app="app" ng-controller="mainController">
+	<ul>
+		<li><a href="#clientes">Clientes</a></li>
+		<li><a href="#proveedores">Proveedor</a></li>
+		<li><a href="#productos">Productos</a></li>
+	</ul>
+	<div class="container">
+		<div ng-view>
+			
+		</div>
+	</div>
+<script>
+		var app = angular.module("app", ['ngRoute']);
+		
+		app.controller('mainController', function($scope){
+			$scope.clientes = null;
+		});
+		
+		app.config(['$routeProvider',function($routeProvider) {
+			   
+			$routeProvider.when('/productos', {
+				templateUrl: "productos.html",
+				controller: "productosController"
+			});
+	   
+			$routeProvider.when('/proveedores', {
+				templateUrl: "proveedores.html",
+				controller: "proveedoresController"
+			});
+	   
+			$routeProvider.when('/clientes', {
+				templateUrl: "clientes.html",
+				controller: "clientesController"
+			});  
+			
+			$routeProvider.when('/clientes/update', {
+				templateUrl: "updateCliente.html",
+				controller: "updateClienteController"
+			});
+	   
+			$routeProvider.otherwise({
+				redirectTo: '/productos'
+			});   
+ 
+		}]);
+		
+		app.controller("productosController", function($scope, $http, $location) {
+			
+			$scope.listar = function(){
+				
+				var config = {
+						method: 'GET', 
+					    url: 'http://localhost:8009/productos'
+				}
+				
+				$http(config).success(function(data, status, headers, config) {
+					$scope.productos=data;
+				}).error(function(data, status, headers, config) {
+					alert("Ha fallado la petición. Estado HTTP:"+status);
+				});
+			}
+			
+			$scope.borrar = function(p_id){
+				var config = {
+						method: 'DELETE', 
+					    url: 'http://localhost:8009/productos/' + p_id
+				}
+				
+				$http(config).success(function(data, status, headers, config) {
+					$scope.listar();
+				}).error(function(data, status, headers, config) {
+					alert("Ha fallado la petición. Estado HTTP:"+status);
+				});
+			};
+			
+			$scope.listar();
+		});
+		
+		app.controller("proveedoresController", function($scope, $http) {
+			
+			$scope.listar = function(){
+				
+				var config={
+						method: 'GET', 
+					    url: 'http://localhost:8009/proveedores'
+				}
+				
+				$http(config).success(function(data, status, headers, config) {
+					$scope.proveedores=data;
+				}).error(function(data, status, headers, config) {
+					alert("Ha fallado la petición. Estado HTTP:"+status);
+				});
+			};
+			
+			$scope.borrar = function(p_id){
+				var config = {
+						method: 'DELETE', 
+					    url: 'http://localhost:8009/proveedores/' + p_id
+				}
+				
+				$http(config).success(function(data, status, headers, config) {
+					$scope.listar();
+				}).error(function(data, status, headers, config) {
+					alert("Ha fallado la petición. Estado HTTP:"+status);
+				});
+			};
+			
+			$scope.listar();
+			
+		});
+		
+		app.controller("clientesController", function($scope, $http, $location) {
+			
+			$scope.listar = function(){
+				var config={
+						method: 'GET', 
+					    url: 'http://localhost:8009/clientes'
+				}
+				
+				$http(config).success(function(data, status, headers, config) {
+					$scope.clientes=data;
+				}).error(function(data, status, headers, config) {
+				    alert("Ha fallado la petición. Estado HTTP:"+status);
+				});
+			};
+			
+			$scope.borrar = function(p_id){
+				var config = {
+						method: 'DELETE', 
+					    url: 'http://localhost:8009/clientes/' + p_id
+				}
+				
+				$http(config).success(function(data, status, headers, config) {
+					$scope.listar();
+				}).error(function(data, status, headers, config) {
+					alert("Ha fallado la petición. Estado HTTP:"+status);
+				});
+			};
+			
+			$scope.modificar = function(p_id){
+				$location.path("/clientes/update").search({id: p_id});
+			};
+			
+			$scope.listar();
+		});
+		
+		app.controller("updateClienteController", function($scope, $routeParams, $location){
+			// Obtener parametro id
+			var p_id = Number($routeParams.id);
+			
+			alert($scope.clientes);
+			
+			for (i = 0; i < $scope.clientes.length; i++) { 
+				alert($scope.clientes[i]);
+			}
+			
+		});
+</script>	
+</body>
+</html>

@@ -1,0 +1,23 @@
+<h1>Mantenedor Clientes</h1>
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+        	<th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Fecha Nacimiento</th>
+            <th>Direccion</th>
+            <th>Accion</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="p in clientes">
+        <tr>
+        	<td><a ng-click="modificar(p.dni)">{{ p.dni }}</a></td>
+            <td>{{p.nombre}}</td>
+            <td>{{p.apellido}}</td>
+            <td>{{p.fechaNac}}</td>
+            <td>{{p.direccion}}</td>
+            <td><button type="button" class="btn btn-danger" ng-click="borrar(p.dni)">Borrar</button></td>
+        </tr>
+    </tbody>
+</table>
